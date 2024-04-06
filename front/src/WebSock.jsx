@@ -28,10 +28,12 @@ const WebSock = () => {
               id:Date.now()
             }
             socket.current.send(JSON.stringify(message))
+            axios.get('http://localhost:4444/letsgo')
+            .then(e=>setMessages(e.data))
         }
         socket.current.onmessage = (event) => {
             const message = JSON.parse(event.data)
-            setMessages(prev=>[message,...prev])            
+            setMessages(prev=>[...prev, message])            
         }
         socket.current.onclose = () => {
             console.log('Socket закрыт')
@@ -47,7 +49,7 @@ const WebSock = () => {
             <div>
                 <form onSubmit={e=>e.preventDefault()}>
                 <input value={username} onChange={e=>setUsername(e.target.value)} type="text" placeholder="Введите ваше имя"/>
-                <button onClick={connect}>go</button>
+                <button onClick={connect}>Вход</button>
                 </form>
             </div>
             </>
@@ -57,7 +59,7 @@ const WebSock = () => {
 <div>
       <form onSubmit={e=>e.preventDefault()}>
         <input value={value} onChange={e=>setValue(e.target.value)} type="text"/>
-        <button onClick={sendMessage}>ok</button>
+        <button onClick={sendMessage}>Написать</button>
       </form>
     </div>
 
